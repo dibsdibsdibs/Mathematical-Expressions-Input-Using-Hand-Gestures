@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+# import tensorflow as tf
 
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)

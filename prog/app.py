@@ -2,6 +2,10 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from tensorflow.keras.models import load_model
+import json
+
+detected_digits = []
+last_detected_digit = None
 
 model = load_model('hand_gesture_model.h5')
 
@@ -36,6 +40,11 @@ while True:
         keypoints = keypoints.reshape(1, -1)
         prediction = model.predict(keypoints)
         predicted_class = np.argmax(prediction)
+
+        if predicted_class != last_detected_digit:
+            detected_digits.append(int(predicted_class))  # Append the detected digit to the list
+            last_detected_digit = predicted_class
+
         cv2.putText(frame, f'Prediction: {predicted_class}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
     # find hands
@@ -54,3 +63,8 @@ while True:
 # release webcam
 cap.release()
 cv2.destroyAllWindows()
+
+with open('detected_digits.json', 'w') as f:
+    json.dump(detected_digits, f)
+
+print("Detected digits:", detected_digits)

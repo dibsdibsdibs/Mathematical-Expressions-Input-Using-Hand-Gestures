@@ -47,7 +47,8 @@ while True:
 
         cv2.putText(frame, f'Prediction: {predicted_class}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
         frame_height = frame.shape[0]
-        cv2.putText(frame, f'Input: {detected_digits}', (10, frame_height - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        detected_digits_str = ''.join(map(str, detected_digits))
+        cv2.putText(frame, f'Input: {detected_digits_str}', (10, frame_height - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
     # find hands
     results = hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))

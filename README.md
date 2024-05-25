@@ -3,5 +3,5 @@
 Needed dependencies:
 1. OpenCV2
 2. Mediapipe
-
-Install `pip install opencv-python opencv-python-headless mediapipe` for mediapipe
+3. Tensorflow
+4. Numpy

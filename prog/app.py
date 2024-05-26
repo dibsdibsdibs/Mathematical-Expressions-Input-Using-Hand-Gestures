@@ -42,7 +42,7 @@ while True:
         predicted_class = np.argmax(prediction)
 
         if predicted_class != last_detected_digit:
-            detected_digits.append(int(predicted_class))  # Append the detected digit to the list
+            detected_digits.append(str(predicted_class))  # Append the detected digit to the list
             last_detected_digit = predicted_class
 
         cv2.putText(frame, f'Prediction: {predicted_class}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)

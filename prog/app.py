@@ -4,10 +4,10 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import json
 
-detected_digits = []
-last_detected_digit = None
+detected_signs = []
+last_detected_sign = None
 
-model = load_model('hand_gesture_model.h5')
+model = load_model('hand_gesture_model.h5')  # Load sign recognition model
 
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)
@@ -41,14 +41,14 @@ while True:
         prediction = model.predict(keypoints)
         predicted_class = np.argmax(prediction)
 
-        if predicted_class != last_detected_digit:
-            detected_digits.append(int(predicted_class))  # Append the detected digit to the list
-            last_detected_digit = predicted_class
+        if predicted_class != last_detected_sign:
+            detected_signs.append(str(predicted_class))
+            last_detected_sign = predicted_class
 
         cv2.putText(frame, f'Prediction: {predicted_class}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
         frame_height = frame.shape[0]
-        detected_digits_str = ''.join(map(str, detected_digits))
-        cv2.putText(frame, f'Input: {detected_digits_str}', (10, frame_height - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        detected_signs_str = ''.join(map(str, detected_signs))
+        cv2.putText(frame, f'Input: {detected_signs_str}', (10, frame_height - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
     # find hands
     results = hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
@@ -57,7 +57,7 @@ while True:
             mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
     # display result
-    cv2.imshow('Hand Gesture Recognition', frame)
+    cv2.imshow('Sign Recognition', frame)
 
     # q for exit
     if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -68,7 +68,7 @@ cap.release()
 
 cv2.destroyAllWindows()
 
-with open('detected_digits.json', 'w') as f:
-    json.dump(detected_digits, f)
+with open('detected_signs.json', 'w') as f:
+    json.dump(detected_signs, f)
 
-print("Detected digits:", detected_digits)
+print("Detected signs:", detected_signs)

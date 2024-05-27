@@ -3,6 +3,7 @@ import mediapipe as mp
 import numpy as np
 from tensorflow.keras.models import load_model
 import json
+import os
 
 detected_digits = ""
 state = "number"
@@ -11,7 +12,9 @@ result = ""
 hand_cooldown = 120
 isdone = False
 
-model = load_model('C:\\Users\\Jewy\\Documents\\Mathematical-Expressions-Input-Using-Hand-Gestures\\prog\\hand_gesture_model.h5')
+# Use relative path to load the model
+model_path = os.path.join(os.path.dirname(__file__), 'hand_gesture_model.h5')
+model = load_model(model_path)
 
 cv2.namedWindow("Detected Digits", cv2.WINDOW_NORMAL)
 

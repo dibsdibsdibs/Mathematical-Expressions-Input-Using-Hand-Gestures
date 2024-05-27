@@ -18,8 +18,6 @@ error_displayed = False
 model_path = os.path.join(os.path.dirname(__file__), 'hand_gesture_model.h5')
 model = load_model(model_path)
 
-cv2.namedWindow("Detected Digits", cv2.WINDOW_NORMAL)
-
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)
 mp_draw = mp.solutions.drawing_utils

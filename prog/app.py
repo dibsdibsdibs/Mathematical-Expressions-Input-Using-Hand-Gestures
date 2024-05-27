@@ -1,3 +1,6 @@
+## CMSC 174: Computer Vision Final Project
+## Submitted by: Jaronay, Lavente, Toreres
+
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -69,7 +72,6 @@ while True:
             prediction = model.predict(keypoints)
             predicted_class = np.argmax(prediction)
 
-          
             if predicted_class == 10:
                 detected_number_symbols += str ("+")
                 
@@ -116,7 +118,7 @@ while True:
 
     text_image = np.zeros((50, 500, 3), dtype=np.uint8)
     cv2.putText(text_image, f'{detected_number_symbols}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-    cv2.imshow("Detected Digits", text_image)
+    cv2.imshow("Detected Equation", text_image)
 
     # find hands
     results = hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))

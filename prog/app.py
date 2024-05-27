@@ -12,7 +12,6 @@ hand_cooldown = 60
 isdone = False
 error_displayed = False
 
-# use relative path to load the model
 model_path = os.path.join(os.path.dirname(__file__), 'hand_gesture_model.h5')
 model = load_model(model_path)
 
@@ -41,7 +40,7 @@ while True:
     if not success:
         break
 
-     # Check key presses immediately
+     # check key presses immediately
     key = cv2.waitKey(1) & 0xFF
     if key == ord('c'):
         detected_digits = ""
@@ -73,28 +72,18 @@ while True:
           
             if predicted_class == 10:
                 detected_digits += str ("+")
-                #detected_digits = detected_digits[:-1]
-                
                 
             elif predicted_class == 11:
                 detected_digits += str ("-")
-                #detected_digits = detected_digits[:-1]
-                
                 
             elif predicted_class == 12:
                 detected_digits += str ("*")
-                #detected_digits = detected_digits[:-1]
-                
                 
             elif predicted_class == 13:
                 detected_digits += str ("/")
-                #detected_digits = detected_digits[:-1]
-                
                 
             elif predicted_class == 14:
                 detected_digits += str ("(")
-                #detected_digits = detected_digits[:-1]
-
                 
             elif predicted_class == 15:
                 detected_digits += str (")")

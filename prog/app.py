@@ -3,15 +3,19 @@ import mediapipe as mp
 import numpy as np
 from tensorflow.keras.models import load_model
 import json
+import os
 
 detected_digits = ""
 state = "number"
 expression = ""
 result = ""
-hand_cooldown = 120
+hand_cooldown = 60
 isdone = False
+error_displayed = False
 
-model = load_model('C:\\Users\\Jewy\\Documents\\Mathematical-Expressions-Input-Using-Hand-Gestures\\prog\\hand_gesture_model.h5')
+# Use relative path to load the model
+model_path = os.path.join(os.path.dirname(__file__), 'hand_gesture_model.h5')
+model = load_model(model_path)
 
 cv2.namedWindow("Detected Digits", cv2.WINDOW_NORMAL)
 
@@ -36,6 +40,25 @@ cap = cv2.VideoCapture(0)
 while True:
     success, frame = cap.read()
     if not success:
+        break
+
+     # Check key presses immediately
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('c'):
+        detected_digits = ""
+        error_displayed = False
+        clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
+        cv2.imshow("Detected Digits", clear_image)
+    elif key == ord('x'):
+        detected_digits = detected_digits[:-1]
+        error_displayed = False
+    elif key == ord('v'):
+        isdone = False
+        detected_digits = ""
+        error_displayed = False
+        clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
+        cv2.imshow("Detected Digits", clear_image)
+    elif key == ord('q'):
         break
 
     # convert frame to rgb
@@ -78,17 +101,31 @@ while True:
                 detected_digits += str (")")
 
             elif predicted_class == 16:
-                result = eval(detected_digits) 
-                detected_digits += str ("=") 
-                detected_digits += str (result)
-                isdone = True
+                if detected_digits:
+                    try:
+                        result = eval(detected_digits)
+                        detected_digits += "=" + str(result)
+                        isdone = True
+                    except Exception:
+                        detected_digits = "Error"
+                        error_displayed = True
+                else:
+                    detected_digits = "Error"
+                    error_displayed = True
             else:
-                detected_digits += str (predicted_class)
+                if error_displayed:
+                    detected_digits = str(predicted_class)
+                    error_displayed = False
+                else:
+                    detected_digits += str(predicted_class)
+
         cv2.putText(frame, f'Prediction: {predicted_class}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-        hand_cooldown = 120
+        hand_cooldown = 60
+
     else:
         hand_cooldown -= 1
         frame_height = frame.shape[0]
+
     text_image = np.zeros((50, 500, 3), dtype=np.uint8)
     cv2.putText(text_image, f'{detected_digits}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
     cv2.imshow("Detected Digits", text_image)
@@ -99,24 +136,8 @@ while True:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
-
-
     # display result
     cv2.imshow('Hand Gesture Recognition', frame)
-    if cv2.waitKey(1) & 0xFF == ord('c'):
-        detected_digits = ""
-        clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
-        cv2.imshow("Detected Digits", clear_image)
-    elif cv2.waitKey(1) & 0xFF == ord('x'):
-        detected_digits = detected_digits[:-1]
-        
-    elif cv2.waitKey(1) & 0xFF == ord('v'):
-        isdone = False
-        detected_digits = ""
-        clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
-        cv2.imshow("Detected Digits", clear_image)
-    elif cv2.waitKey(1) & 0xFF == ord('q'):
-        break
 
 # release webcam
 cap.release()

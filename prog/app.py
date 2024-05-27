@@ -50,34 +50,39 @@ while True:
             predicted_class = np.argmax(prediction)
 
             if predicted_class != last_detected_digit:
-                if predicted_class == 1:
+                if predicted_class == 10:
                     detected_digits += str ("+")
                     #detected_digits = detected_digits[:-1]
                     last_detected_digit = predicted_class
                     cooldown = 120
-                elif predicted_class == 2:
+                elif predicted_class == 11:
                     detected_digits += str ("-")
                     #detected_digits = detected_digits[:-1]
                     last_detected_digit = predicted_class
                     cooldown = 120
-                elif predicted_class == 3:
+                elif predicted_class == 12:
                     detected_digits += str ("*")
                     #detected_digits = detected_digits[:-1]
                     last_detected_digit = predicted_class
                     cooldown = 120
-                elif predicted_class == 4:
+                elif predicted_class == 13:
                     detected_digits += str ("/")
                     #detected_digits = detected_digits[:-1]
                     last_detected_digit = predicted_class
                     cooldown = 120
+                elif predicted_class == 14:
+                    detected_digits += str ("(")
+                    #detected_digits = detected_digits[:-1]
+                    last_detected_digit = predicted_class
+                    cooldown = 120
+                elif predicted_class == 15:
+                    detected_digits += str (")")
+                    #detected_digits = detected_digits[:-1]
+                    last_detected_digit = predicted_class
+                    cooldown = 120
                 #elif detected_digits and detected_digits[-1] == '0':
-<<<<<<< Updated upstream
-                elif predicted_class == 0:
-                    result = eval(detected_digits[:-1]) 
-=======
                 elif predicted_class == 16:
                     result = eval(detected_digits) 
->>>>>>> Stashed changes
                     detected_digits += str ("=") 
                     detected_digits += str (result)
                 else:

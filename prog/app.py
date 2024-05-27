@@ -92,7 +92,8 @@ while True:
                 if detected_number_symbols:
                     try:
                         result = eval(detected_number_symbols)
-                        detected_number_symbols += "=" + str(result)
+                        formatted_result = "{:.3f}".format(result).rstrip('0').rstrip('.')
+                        detected_number_symbols += "=" + str(formatted_result)
                         isdone = True
                     except Exception:
                         detected_number_symbols = "Error"

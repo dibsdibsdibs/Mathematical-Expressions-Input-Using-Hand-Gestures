@@ -41,11 +41,48 @@ while True:
         prediction = model.predict(keypoints)
         predicted_class = np.argmax(prediction)
 
-        if predicted_class != last_detected_digit:
-            detected_digits.append(int(predicted_class))  # Append the detected digit to the list
-            last_detected_digit = predicted_class
-
-        cv2.putText(frame, f'Prediction: {predicted_class}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+            if predicted_class != last_detected_digit:
+                if predicted_class == 10:
+                    detected_digits += str ("+")
+                    #detected_digits = detected_digits[:-1]
+                    last_detected_digit = predicted_class
+                    cooldown = 120
+                elif predicted_class == 11:
+                    detected_digits += str ("-")
+                    #detected_digits = detected_digits[:-1]
+                    last_detected_digit = predicted_class
+                    cooldown = 120
+                elif predicted_class == 12:
+                    detected_digits += str ("*")
+                    #detected_digits = detected_digits[:-1]
+                    last_detected_digit = predicted_class
+                    cooldown = 120
+                elif predicted_class == 13:
+                    detected_digits += str ("/")
+                    #detected_digits = detected_digits[:-1]
+                    last_detected_digit = predicted_class
+                    cooldown = 120
+                elif predicted_class == 14:
+                    detected_digits += str ("(")
+                    #detected_digits = detected_digits[:-1]
+                    last_detected_digit = predicted_class
+                    cooldown = 120
+                elif predicted_class == 15:
+                    detected_digits += str (")")
+                    #detected_digits = detected_digits[:-1]
+                    last_detected_digit = predicted_class
+                    cooldown = 120
+                #elif detected_digits and detected_digits[-1] == '0':
+                elif predicted_class == 16:
+                    result = eval(detected_digits[:-1]) 
+                    detected_digits += str ("=") 
+                    detected_digits += str (result)
+                else:
+                    detected_digits += str (predicted_class)
+            cv2.putText(frame, f'Prediction: {predicted_class}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+            hand_cooldown = 120
+    else:
+        hand_cooldown -= 1
         frame_height = frame.shape[0]
         detected_digits_str = ''.join(map(str, detected_digits))
         cv2.putText(frame, f'Input: {detected_digits_str}', (10, frame_height - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)

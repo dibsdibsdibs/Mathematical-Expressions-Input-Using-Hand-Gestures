@@ -41,6 +41,22 @@ while True:
     if not success:
         break
 
+     # Check key presses immediately
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('c'):
+        detected_digits = ""
+        clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
+        cv2.imshow("Detected Digits", clear_image)
+    elif key == ord('x'):
+        detected_digits = detected_digits[:-1]
+    elif key == ord('v'):
+        isdone = False
+        detected_digits = ""
+        clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
+        cv2.imshow("Detected Digits", clear_image)
+    elif key == ord('q'):
+        break
+
     # convert frame to rgb
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     
@@ -102,24 +118,8 @@ while True:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
-
-
     # display result
     cv2.imshow('Hand Gesture Recognition', frame)
-    if cv2.waitKey(1) & 0xFF == ord('c'):
-        detected_digits = ""
-        clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
-        cv2.imshow("Detected Digits", clear_image)
-    elif cv2.waitKey(1) & 0xFF == ord('x'):
-        detected_digits = detected_digits[:-1]
-        
-    elif cv2.waitKey(1) & 0xFF == ord('v'):
-        isdone = False
-        detected_digits = ""
-        clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
-        cv2.imshow("Detected Digits", clear_image)
-    elif cv2.waitKey(1) & 0xFF == ord('q'):
-        break
 
 # release webcam
 cap.release()

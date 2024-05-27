@@ -2,7 +2,6 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from tensorflow.keras.models import load_model
-import json
 import os
 
 detected_digits = ""
@@ -13,7 +12,7 @@ hand_cooldown = 60
 isdone = False
 error_displayed = False
 
-# Use relative path to load the model
+# use relative path to load the model
 model_path = os.path.join(os.path.dirname(__file__), 'hand_gesture_model.h5')
 model = load_model(model_path)
 
@@ -143,8 +142,5 @@ while True:
 cap.release()
 
 cv2.destroyAllWindows()
-
-with open('detected_digits.json', 'w') as f:
-    json.dump(detected_digits, f)
 
 print("Detected digits:", detected_digits)

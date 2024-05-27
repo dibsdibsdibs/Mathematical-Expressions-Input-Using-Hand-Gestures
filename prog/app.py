@@ -4,7 +4,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import os
 
-detected_digits = ""
+detected_number_symbols = ""
 state = "number"
 expression = ""
 result = ""
@@ -43,16 +43,16 @@ while True:
      # check key presses immediately
     key = cv2.waitKey(1) & 0xFF
     if key == ord('c'):
-        detected_digits = ""
+        detected_number_symbols = ""
         error_displayed = False
         clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
         cv2.imshow("Detected Digits", clear_image)
     elif key == ord('x'):
-        detected_digits = detected_digits[:-1]
+        detected_number_symbols = detected_number_symbols[:-1]
         error_displayed = False
     elif key == ord('v'):
         isdone = False
-        detected_digits = ""
+        detected_number_symbols = ""
         error_displayed = False
         clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
         cv2.imshow("Detected Digits", clear_image)
@@ -71,41 +71,41 @@ while True:
 
           
             if predicted_class == 10:
-                detected_digits += str ("+")
+                detected_number_symbols += str ("+")
                 
             elif predicted_class == 11:
-                detected_digits += str ("-")
+                detected_number_symbols += str ("-")
                 
             elif predicted_class == 12:
-                detected_digits += str ("*")
+                detected_number_symbols += str ("*")
                 
             elif predicted_class == 13:
-                detected_digits += str ("/")
+                detected_number_symbols += str ("/")
                 
             elif predicted_class == 14:
-                detected_digits += str ("(")
+                detected_number_symbols += str ("(")
                 
             elif predicted_class == 15:
-                detected_digits += str (")")
+                detected_number_symbols += str (")")
 
             elif predicted_class == 16:
-                if detected_digits:
+                if detected_number_symbols:
                     try:
-                        result = eval(detected_digits)
-                        detected_digits += "=" + str(result)
+                        result = eval(detected_number_symbols)
+                        detected_number_symbols += "=" + str(result)
                         isdone = True
                     except Exception:
-                        detected_digits = "Error"
+                        detected_number_symbols = "Error"
                         error_displayed = True
                 else:
-                    detected_digits = "Error"
+                    detected_number_symbols = "Error"
                     error_displayed = True
             else:
                 if error_displayed:
-                    detected_digits = str(predicted_class)
+                    detected_number_symbols = str(predicted_class)
                     error_displayed = False
                 else:
-                    detected_digits += str(predicted_class)
+                    detected_number_symbols += str(predicted_class)
 
         cv2.putText(frame, f'Prediction: {predicted_class}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
         hand_cooldown = 60
@@ -115,7 +115,7 @@ while True:
         frame_height = frame.shape[0]
 
     text_image = np.zeros((50, 500, 3), dtype=np.uint8)
-    cv2.putText(text_image, f'{detected_digits}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+    cv2.putText(text_image, f'{detected_number_symbols}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
     cv2.imshow("Detected Digits", text_image)
 
     # find hands
@@ -132,4 +132,4 @@ cap.release()
 
 cv2.destroyAllWindows()
 
-print("Detected digits:", detected_digits)
+print("Detected digits:", detected_number_symbols)

@@ -71,8 +71,13 @@ while True:
                     last_detected_digit = predicted_class
                     cooldown = 120
                 #elif detected_digits and detected_digits[-1] == '0':
+<<<<<<< Updated upstream
                 elif predicted_class == 0:
                     result = eval(detected_digits[:-1]) 
+=======
+                elif predicted_class == 16:
+                    result = eval(detected_digits) 
+>>>>>>> Stashed changes
                     detected_digits += str ("=") 
                     detected_digits += str (result)
                 else:

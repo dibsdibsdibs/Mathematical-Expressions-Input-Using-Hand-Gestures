@@ -47,7 +47,7 @@ while True:
         detected_number_symbols = ""
         error_displayed = False
         clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
-        cv2.imshow("Detected Digits", clear_image)
+        cv2.imshow("Detected Equation", clear_image)
     elif key == ord('x'):
         detected_number_symbols = detected_number_symbols[:-1]
         error_displayed = False
@@ -56,7 +56,7 @@ while True:
         detected_number_symbols = ""
         error_displayed = False
         clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
-        cv2.imshow("Detected Digits", clear_image)
+        cv2.imshow("Detected Equation", clear_image)
     elif key == ord('q'):
         break
 
@@ -132,4 +132,4 @@ cap.release()
 
 cv2.destroyAllWindows()
 
-print("Detected digits:", detected_number_symbols)
+print("Detected Equation:", detected_number_symbols)

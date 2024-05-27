@@ -4,10 +4,17 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import json
 
-detected_digits = []
+detected_digits = ""
 last_detected_digit = None
+cooldown = 0
+state = "number"
+expression = ""
+result = ""
+hand_cooldown = 120
 
-model = load_model('hand_gesture_model.h5')
+model = load_model('C:\\Users\\Jewy\\Documents\\Mathematical-Expressions-Input-Using-Hand-Gestures\\prog\\hand_gesture_model.h5')
+
+cv2.namedWindow("Detected Digits", cv2.WINDOW_NORMAL)
 
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)
@@ -35,11 +42,12 @@ while True:
     # convert frame to rgb
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     
-    keypoints = extract_keypoints(frame)
-    if keypoints is not None:
-        keypoints = keypoints.reshape(1, -1)
-        prediction = model.predict(keypoints)
-        predicted_class = np.argmax(prediction)
+    if hand_cooldown == 0:
+        keypoints = extract_keypoints(frame)
+        if keypoints is not None and cooldown == 0:
+            keypoints = keypoints.reshape(1, -1)
+            prediction = model.predict(keypoints)
+            predicted_class = np.argmax(prediction)
 
             if predicted_class != last_detected_digit:
                 if predicted_class == 10:
@@ -84,8 +92,12 @@ while True:
     else:
         hand_cooldown -= 1
         frame_height = frame.shape[0]
-        detected_digits_str = ''.join(map(str, detected_digits))
-        cv2.putText(frame, f'Input: {detected_digits_str}', (10, frame_height - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+    text_image = np.zeros((50, 500, 3), dtype=np.uint8)
+    cv2.putText(text_image, f'{detected_digits}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+    cv2.imshow("Detected Digits", text_image)
+
+    if cooldown > 0:
+        cooldown -= 1
 
     # find hands
     results = hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
@@ -93,11 +105,17 @@ while True:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
+
+
     # display result
     cv2.imshow('Hand Gesture Recognition', frame)
-
-    # q for exit
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('c'):
+        detected_digits = ""
+        clear_image = np.zeros((50, 500, 3), dtype=np.uint8)
+        cv2.imshow("Detected Digits", clear_image)
+    elif cv2.waitKey(1) & 0xFF == ord('x'):
+        detected_digits = detected_digits[:-1]
+    elif cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 # release webcam
